@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -19,8 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
@@ -128,9 +130,9 @@ public class MainActivity extends ActionBarActivity {
 
     private void selectItem(int position) {
         // update the main content by replacing fragments
-        Fragment fragment = new PlanetFragment();
+        Fragment fragment = new JokeCategoryFragment();
         Bundle args = new Bundle();
-        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
+        args.putInt(JokeCategoryFragment.ARG_JOKE_CATEGORY, position);
         fragment.setArguments(args);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -170,26 +172,114 @@ public class MainActivity extends ActionBarActivity {
     /**
      * Fragment that appears in the "content_frame", shows a planet
      */
-    public static class PlanetFragment extends Fragment {
-        public static final String ARG_PLANET_NUMBER = "planet_number";
+    public static class JokeCategoryFragment extends Fragment {
+        public static final String ARG_JOKE_CATEGORY = "joke_category";
+    	/**
+    	 * The {@link android.support.v4.view.PagerAdapter} that will provide
+    	 * fragments for each of the sections. We use a
+    	 * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which
+    	 * will keep every loaded fragment in memory. If this becomes too memory
+    	 * intensive, it may be best to switch to a
+    	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
+    	 */
+    	SectionsPagerAdapter mSectionsPagerAdapter;
 
-        public PlanetFragment() {
+    	/**
+    	 * The {@link ViewPager} that will host the section contents.
+    	 */
+    	ViewPager mViewPager;
+
+        public JokeCategoryFragment() {
             // Empty constructor required for fragment subclasses
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_planet, container, false);
-            int i = getArguments().getInt(ARG_PLANET_NUMBER);
-            String planet = getResources().getStringArray(R.array.joke_categories_array)[i];
+            View rootView = inflater.inflate(R.layout.fragment_joke_category, container, false);
+            int i = getArguments().getInt(ARG_JOKE_CATEGORY);
+            String category = getResources().getStringArray(R.array.joke_categories_array)[i];
 
-            int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()),
-                            "drawable", getActivity().getPackageName());
-            ((ImageView) rootView.findViewById(R.id.image)).setImageResource(imageId);
-            getActivity().setTitle(planet);
+            // Create the adapter that will return a fragment for each of the three
+    		// primary sections of the app.
+    		mSectionsPagerAdapter = new SectionsPagerAdapter(
+    				getChildFragmentManager());
+
+    		// Set up the ViewPager with the sections adapter.
+    		mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
+    		mViewPager.setAdapter(mSectionsPagerAdapter);
             return rootView;
         }
+        
+        /**
+    	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+    	 * one of the sections/tabs/pages.
+    	 */
+    	public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+    		public SectionsPagerAdapter(FragmentManager fm) {
+    			super(fm);
+    		}
+
+    		@Override
+    		public Fragment getItem(int position) {
+    			// getItem is called to instantiate the fragment for the given page.
+    			// Return a DummySectionFragment (defined as a static inner class
+    			// below) with the page number as its lone argument.
+    			Fragment fragment = new DummySectionFragment();
+    			Bundle args = new Bundle();
+    			args.putInt(DummySectionFragment.ARG_SECTION_NAME, position + 1);
+    			fragment.setArguments(args);
+    			return fragment;
+    		}
+
+    		@Override
+    		public int getCount() {
+    			// Show 3 total pages.
+    			return 3;
+    		}
+
+    		@Override
+    		public CharSequence getPageTitle(int position) {
+    			Locale l = Locale.getDefault();
+    			switch (position) {
+    			case 0:
+    				return getString(R.string.title_section1).toUpperCase(l);
+    			case 1:
+    				return getString(R.string.title_section2).toUpperCase(l);
+    			case 2:
+    				return getString(R.string.title_section3).toUpperCase(l);
+    			}
+    			return null;
+    		}
+    	}
+
+    	/**
+    	 * A dummy fragment representing a section of the app, but that simply
+    	 * displays dummy text.
+    	 */
+    	public static class DummySectionFragment extends Fragment {
+    		/**
+    		 * The fragment argument representing the section number for this
+    		 * fragment.
+    		 */
+    		public static final String ARG_SECTION_NAME = "section_name";
+
+    		public DummySectionFragment() {
+    		}
+
+    		@Override
+    		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    				Bundle savedInstanceState) {
+    			View rootView = inflater.inflate(R.layout.fragment_main_dummy,
+    					container, false);
+    			TextView dummyTextView = (TextView) rootView
+    					.findViewById(R.id.section_label);
+    			dummyTextView.setText(Integer.toString(getArguments().getInt(
+    					ARG_SECTION_NAME)));
+    			return rootView;
+    		}
+    	}
     }
   
 }
