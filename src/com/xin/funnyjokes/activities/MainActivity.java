@@ -1,6 +1,8 @@
-package com.xin.funnyjokes;
+package com.xin.funnyjokes.activities;
 
 import java.util.Locale;
+
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 
 import android.app.SearchManager;
 import android.content.Intent;
@@ -13,6 +15,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,8 +25,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.xin.funnyjokes.R;
 
 public class MainActivity extends ActionBarActivity {
     private DrawerLayout mDrawerLayout;
@@ -33,6 +39,8 @@ public class MainActivity extends ActionBarActivity {
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
     private String[] mPlanetTitles;
+    
+    private PullToRefreshAttacher mPullToRefreshAttacher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +60,9 @@ public class MainActivity extends ActionBarActivity {
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        
+        // The attacher should always be created in the Activity's onCreate
+        mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
 
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
@@ -77,6 +88,10 @@ public class MainActivity extends ActionBarActivity {
         if (savedInstanceState == null) {
            selectItem(0);
         }
+    }
+    
+    PullToRefreshAttacher getPullToRefreshAttacher() {
+        return mPullToRefreshAttacher;
     }
 
     @Override
@@ -206,7 +221,7 @@ public class MainActivity extends ActionBarActivity {
     				getChildFragmentManager());
 
     		// Set up the ViewPager with the sections adapter.
-    		mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
+    		mViewPager = (ViewPager) rootView.findViewById(R.id.pager	);
     		mViewPager.setAdapter(mSectionsPagerAdapter);
             return rootView;
         }
@@ -258,12 +273,14 @@ public class MainActivity extends ActionBarActivity {
     	 * A dummy fragment representing a section of the app, but that simply
     	 * displays dummy text.
     	 */
-    	public static class DummySectionFragment extends Fragment {
+    	public static class DummySectionFragment extends Fragment implements
+        PullToRefreshAttacher.OnRefreshListener {
     		/**
     		 * The fragment argument representing the section number for this
     		 * fragment.
     		 */
     		public static final String ARG_SECTION_NAME = "section_name";
+    		private PullToRefreshAttacher mPullToRefreshAttacher;
 
     		public DummySectionFragment() {
     		}
@@ -275,10 +292,29 @@ public class MainActivity extends ActionBarActivity {
     					container, false);
     			TextView dummyTextView = (TextView) rootView
     					.findViewById(R.id.section_label);
+    			ScrollView scrollView = (ScrollView) rootView.findViewById(R.id.ptr_scrollview);
+    			// The ScrollView is what we'll be listening to for refresh starts
+
+                // Now get the PullToRefresh attacher from the Activity. An exercise to the reader
+                // is to create an implicit interface instead of casting to the concrete Activity
+    			mPullToRefreshAttacher = ((MainActivity) getActivity())
+                        .getPullToRefreshAttacher();
+
+                // Now set the ScrollView as the refreshable view, and the refresh listener (this)
+                mPullToRefreshAttacher.addRefreshableView(scrollView, this);
+
+    			
     			dummyTextView.setText(Integer.toString(getArguments().getInt(
     					ARG_SECTION_NAME)));
     			return rootView;
     		}
+
+			@Override
+			public void onRefreshStarted(View view) {
+				Log.e("Test", "Worked");
+				mPullToRefreshAttacher.setRefreshComplete();
+				
+			}
     	}
     }
   
