@@ -1,5 +1,6 @@
 package com.xin.funnyjokes.activities;
 
+import java.util.List;
 import java.util.Locale;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
@@ -30,6 +31,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xin.funnyjokes.R;
+import com.xin.funnyjokes.models.Joke;
+import com.xin.funnyjokes.services.FunnyJokesDataProvider;
+import com.xin.funnyjokes.services.FunnyJokesDataProviderImpl;
+import com.xin.funnyjokes.services.FunnyJokesResponseHandler;
 
 public class MainActivity extends ActionBarActivity {
     private DrawerLayout mDrawerLayout;
@@ -284,6 +289,8 @@ public class MainActivity extends ActionBarActivity {
 
     		public DummySectionFragment() {
     		}
+    		
+    		FunnyJokesDataProvider dataProvider;
 
     		@Override
     		public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -306,15 +313,37 @@ public class MainActivity extends ActionBarActivity {
     			
     			dummyTextView.setText(Integer.toString(getArguments().getInt(
     					ARG_SECTION_NAME)));
+    			
+    			dataProvider = new FunnyJokesDataProviderImpl();
     			return rootView;
     		}
 
 			@Override
 			public void onRefreshStarted(View view) {
-				Log.e("Test", "Worked");
-				mPullToRefreshAttacher.setRefreshComplete();
+				dataProvider.getJokes("1", 1, new FunnyJokesResponseHandler<List<Joke>>()
+				{
+
+					@Override
+					public void onSuccess(List<Joke> t) {
+						for (Joke j : t)
+						{
+							Log.e(j.getId(), "Haha");
+						}
+						mPullToRefreshAttacher.setRefreshComplete();
+						
+					}
+
+					@Override
+					public void onFailure(Exception e) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+				});
 				
 			}
+			
+			
     	}
     }
   

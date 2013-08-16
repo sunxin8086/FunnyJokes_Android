@@ -1,7 +1,7 @@
 package com.xin.funnyjokes.models;
 
 
-public class Joke{
+public class Joke extends BaseObject{
    	private String authorId;
    	private String category;
    	private String language;
