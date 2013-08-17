@@ -2,7 +2,7 @@ package com.xin.funnyjokes.models;
 
 import java.util.Date;
 
-public class Person {
+public class Person extends BaseObject {
 
    	private String username;
    	private String password;

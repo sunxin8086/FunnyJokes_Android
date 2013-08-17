@@ -5,8 +5,8 @@ import java.util.Date;
 public class BaseObject {
    	protected String id;
    	protected String etag;
-   	private Date updated;
-   	private Date created;
+   	protected Date updated;
+   	protected Date created;
 
 	public String getId() {
 		return id;

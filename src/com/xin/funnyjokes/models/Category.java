@@ -3,6 +3,7 @@ package com.xin.funnyjokes.models;
 import java.util.Date;
 
 public class Category extends BaseObject {
+	private String name;
    	private String shortName;
    	private String language;
    	private String description;
@@ -11,17 +12,11 @@ public class Category extends BaseObject {
    	private Date updated;
    	private Date created;
    	
-	public String getId() {
-		return id;
+	public String getName() {
+		return name;
 	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getEtag() {
-		return etag;
-	}
-	public void setEtag(String etag) {
-		this.etag = etag;
+	public void setName(String name) {
+		this.name = name;
 	}
 	public String getShortName() {
 		return shortName;

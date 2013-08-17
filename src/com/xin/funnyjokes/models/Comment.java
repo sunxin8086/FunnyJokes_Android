@@ -1,7 +1,7 @@
 package com.xin.funnyjokes.models;
 
 
-public class Comment {
+public class Comment extends BaseObject {
    	private String jokeId;
    	private String authorId;
    	private String content;

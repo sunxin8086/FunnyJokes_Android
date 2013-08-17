@@ -1,6 +1,6 @@
 package com.xin.funnyjokes.models;
 
-public class Like {
+public class Like extends BaseObject {
    	private String jokeId;
    	private String authorId;
    	private Boolean liked;
