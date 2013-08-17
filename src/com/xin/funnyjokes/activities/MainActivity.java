@@ -1,10 +1,6 @@
 package com.xin.funnyjokes.activities;
 
-import java.util.List;
-import java.util.Locale;
-
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
-
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -12,11 +8,9 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,15 +20,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xin.funnyjokes.R;
-import com.xin.funnyjokes.models.Joke;
-import com.xin.funnyjokes.services.FunnyJokesDataProvider;
-import com.xin.funnyjokes.services.FunnyJokesDataProviderImpl;
-import com.xin.funnyjokes.services.FunnyJokesResponseHandler;
+import com.xin.funnyjokes.adapters.JokeSectionsPagerAdapter;
+import com.xin.funnyjokes.fragments.JokeCategoryFragment;
 
 public class MainActivity extends ActionBarActivity {
     private DrawerLayout mDrawerLayout;
@@ -95,7 +85,7 @@ public class MainActivity extends ActionBarActivity {
         }
     }
     
-    PullToRefreshAttacher getPullToRefreshAttacher() {
+    public PullToRefreshAttacher getPullToRefreshAttacher() {
         return mPullToRefreshAttacher;
     }
 
@@ -187,164 +177,5 @@ public class MainActivity extends ActionBarActivity {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    /**
-     * Fragment that appears in the "content_frame", shows a planet
-     */
-    public static class JokeCategoryFragment extends Fragment {
-        public static final String ARG_JOKE_CATEGORY = "joke_category";
-    	/**
-    	 * The {@link android.support.v4.view.PagerAdapter} that will provide
-    	 * fragments for each of the sections. We use a
-    	 * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which
-    	 * will keep every loaded fragment in memory. If this becomes too memory
-    	 * intensive, it may be best to switch to a
-    	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-    	 */
-    	SectionsPagerAdapter mSectionsPagerAdapter;
-
-    	/**
-    	 * The {@link ViewPager} that will host the section contents.
-    	 */
-    	ViewPager mViewPager;
-
-        public JokeCategoryFragment() {
-            // Empty constructor required for fragment subclasses
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_joke_category, container, false);
-            int i = getArguments().getInt(ARG_JOKE_CATEGORY);
-            String category = getResources().getStringArray(R.array.joke_categories_array)[i];
-
-            // Create the adapter that will return a fragment for each of the three
-    		// primary sections of the app.
-    		mSectionsPagerAdapter = new SectionsPagerAdapter(
-    				getChildFragmentManager());
-
-    		// Set up the ViewPager with the sections adapter.
-    		mViewPager = (ViewPager) rootView.findViewById(R.id.pager	);
-    		mViewPager.setAdapter(mSectionsPagerAdapter);
-            return rootView;
-        }
-        
-        /**
-    	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-    	 * one of the sections/tabs/pages.
-    	 */
-    	public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-    		public SectionsPagerAdapter(FragmentManager fm) {
-    			super(fm);
-    		}
-
-    		@Override
-    		public Fragment getItem(int position) {
-    			// getItem is called to instantiate the fragment for the given page.
-    			// Return a DummySectionFragment (defined as a static inner class
-    			// below) with the page number as its lone argument.
-    			Fragment fragment = new DummySectionFragment();
-    			Bundle args = new Bundle();
-    			args.putInt(DummySectionFragment.ARG_SECTION_NAME, position + 1);
-    			fragment.setArguments(args);
-    			return fragment;
-    		}
-
-    		@Override
-    		public int getCount() {
-    			// Show 3 total pages.
-    			return 3;
-    		}
-
-    		@Override
-    		public CharSequence getPageTitle(int position) {
-    			Locale l = Locale.getDefault();
-    			switch (position) {
-    			case 0:
-    				return getString(R.string.title_section1).toUpperCase(l);
-    			case 1:
-    				return getString(R.string.title_section2).toUpperCase(l);
-    			case 2:
-    				return getString(R.string.title_section3).toUpperCase(l);
-    			}
-    			return null;
-    		}
-    	}
-
-    	/**
-    	 * A dummy fragment representing a section of the app, but that simply
-    	 * displays dummy text.
-    	 */
-    	public static class DummySectionFragment extends Fragment implements
-        PullToRefreshAttacher.OnRefreshListener {
-    		/**
-    		 * The fragment argument representing the section number for this
-    		 * fragment.
-    		 */
-    		public static final String ARG_SECTION_NAME = "section_name";
-    		private PullToRefreshAttacher mPullToRefreshAttacher;
-
-    		public DummySectionFragment() {
-    		}
-    		
-    		FunnyJokesDataProvider dataProvider;
-
-    		@Override
-    		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-    				Bundle savedInstanceState) {
-    			View rootView = inflater.inflate(R.layout.fragment_main_dummy,
-    					container, false);
-    			TextView dummyTextView = (TextView) rootView
-    					.findViewById(R.id.section_label);
-    			ScrollView scrollView = (ScrollView) rootView.findViewById(R.id.ptr_scrollview);
-    			// The ScrollView is what we'll be listening to for refresh starts
-
-                // Now get the PullToRefresh attacher from the Activity. An exercise to the reader
-                // is to create an implicit interface instead of casting to the concrete Activity
-    			mPullToRefreshAttacher = ((MainActivity) getActivity())
-                        .getPullToRefreshAttacher();
-
-                // Now set the ScrollView as the refreshable view, and the refresh listener (this)
-                mPullToRefreshAttacher.addRefreshableView(scrollView, this);
-
-    			
-    			dummyTextView.setText(Integer.toString(getArguments().getInt(
-    					ARG_SECTION_NAME)));
-    			
-    			dataProvider = new FunnyJokesDataProviderImpl();
-    			return rootView;
-    		}
-
-			@Override
-			public void onRefreshStarted(View view) {
-				dataProvider.getJokes("1", 1, new FunnyJokesResponseHandler<List<Joke>>()
-				{
-
-					@Override
-					public void onSuccess(List<Joke> t) {
-						for (Joke j : t)
-						{
-							Log.e(j.getId(), "Haha");
-						}
-						mPullToRefreshAttacher.setRefreshComplete();
-						
-					}
-
-					@Override
-					public void onFailure(Exception e) {
-						// TODO Auto-generated method stub
-						
-					}
-					
-				});
-				
-			}
-			
-			
-    	}
-    }
-  
+    } 
 }
