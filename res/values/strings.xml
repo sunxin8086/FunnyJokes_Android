@@ -17,4 +17,6 @@
     <string name="title_section1">Latest</string>
     <string name="title_section2">Daily Top</string>
     <string name="title_section3">Weekly Top</string>
+    <string name="title_section3">Monthly Top</string>
+    <string name="title_section3">All Time</string>
 </resources>
