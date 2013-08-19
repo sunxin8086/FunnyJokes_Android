@@ -38,16 +38,16 @@ public class JokeCategoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_joke_category, container, false);
-        int i = getArguments().getInt(ARG_JOKE_CATEGORY);
-        String category = getResources().getStringArray(R.array.joke_categories_array)[i];
+        String category = getArguments().getString(ARG_JOKE_CATEGORY);
 
         // Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
 		mSectionsPagerAdapter = new JokeSectionsPagerAdapter(
-				getChildFragmentManager());
+				getChildFragmentManager(), category);
 
 		// Set up the ViewPager with the sections adapter.
-		mViewPager = (ViewPager) rootView.findViewById(R.id.pager	);
+		mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
+		mViewPager.setOffscreenPageLimit(4);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
         return rootView;
     }
