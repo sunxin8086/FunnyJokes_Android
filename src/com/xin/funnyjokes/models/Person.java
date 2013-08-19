@@ -2,6 +2,8 @@ package com.xin.funnyjokes.models;
 
 import java.util.Date;
 
+import com.xin.funnyjokes.utils.FunnyJokesUtils;
+
 public class Person extends BaseObject {
 
    	private String username;
@@ -52,6 +54,9 @@ public class Person extends BaseObject {
 	}
 	public void setBirthday(Date birthday) {
 		this.birthday = birthday;
+	}
+	public void setBirthday(String birthday) {
+		this.birthday = FunnyJokesUtils.getDateFromString(birthday);
 	}
 	public String getProfileTitle() {
 		return profileTitle;
