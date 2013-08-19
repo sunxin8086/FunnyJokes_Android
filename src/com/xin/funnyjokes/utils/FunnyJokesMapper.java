@@ -26,8 +26,8 @@ public class FunnyJokesMapper {
 		category.setDescription(obj.getString("description"));
 		category.setCount(obj.getInt("count"));
 		category.setHidden(obj.getBoolean("hidden"));
-		category.setCreated(FunnyJokesUtils.getDateFromString(obj.getString("created")));
-		category.setUpdated(FunnyJokesUtils.getDateFromString(obj.getString("updated")));
+		category.setCreated(obj.getString("created"));
+		category.setUpdated(obj.getString("updated"));
 		return category;
 	}
 	
@@ -58,8 +58,8 @@ public class FunnyJokesMapper {
 		person.setCommentsNumber(obj.getInt("comments_number"));
 		person.setLikesNumber(obj.getInt("likes_number"));
 		person.setDislikesNumber(obj.getInt("dislikes_number"));
-		person.setCreated(FunnyJokesUtils.getDateFromString(obj.getString("created")));
-		person.setUpdated(FunnyJokesUtils.getDateFromString(obj.getString("updated")));
+		person.setCreated(obj.getString("created"));
+		person.setUpdated(obj.getString("updated"));
 		return person;
 	}
 	
@@ -88,8 +88,8 @@ public class FunnyJokesMapper {
 		joke.setLikesNumber(obj.getInt("likes_number"));
 		joke.setDislikesNumber(obj.getInt("dislikes_number"));
 		joke.setSharesNumber(obj.getInt("shares_number"));
-		joke.setCreated(FunnyJokesUtils.getDateFromString(obj.getString("created")));
-		joke.setUpdated(FunnyJokesUtils.getDateFromString(obj.getString("updated")));
+		joke.setCreated(obj.getString("created"));
+		joke.setUpdated(obj.getString("updated"));
 		return joke;
 	}
 	
@@ -111,8 +111,8 @@ public class FunnyJokesMapper {
 		comment.setEtag(obj.getString("etag"));
 		comment.setAuthorId(obj.getString("author_id"));
 		comment.setContent(obj.getString("content"));
-		comment.setCreated(FunnyJokesUtils.getDateFromString(obj.getString("created")));
-		comment.setUpdated(FunnyJokesUtils.getDateFromString(obj.getString("updated")));
+		comment.setCreated(obj.getString("created"));
+		comment.setUpdated(obj.getString("updated"));
 		return comment;
 	}
 	
@@ -134,8 +134,8 @@ public class FunnyJokesMapper {
 		like.setEtag(obj.getString("etag"));
 		like.setAuthorId(obj.getString("author_id"));
 		like.setLiked(obj.getBoolean("liked"));
-		like.setCreated(FunnyJokesUtils.getDateFromString(obj.getString("created")));
-		like.setUpdated(FunnyJokesUtils.getDateFromString(obj.getString("updated")));
+		like.setCreated(obj.getString("created"));
+		like.setUpdated(obj.getString("updated"));
 		return like;
 	}
 	
